@@ -48,10 +48,10 @@ app.route('/wagenweg170B/solenoid/')
   .post(function (req, res, next) {
     
     if(!req.body.switch) {
-      client.publish('/wagenweg/planten/off', req.body.solenoidid.toString());
-      res.send({'closed': req.body.solenoidid} );
+      client.publish('/wagenweg/planten/off', "1");
+      res.send({'closed': true} );
     } else if(req.body.switch) {
-      client.publish('/wagenweg/planten', req.body.solenoidid.toString());
+      client.publish('/wagenweg/planten', req.body.solenoidid.toString() + '-' + req.body.time.toString());
       res.send({'opened': req.body.solenoidid} );
     }
   });
