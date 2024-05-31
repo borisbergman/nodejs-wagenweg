@@ -18,56 +18,79 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
 		integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
 		crossorigin="anonymous"></script>
-	<div id="div0" class="class='col-xs-3">
-		<button id="button0" class="btn btn-primary btn-lg btn-block">1</button>
-		<button id="off0" class="btn btn-primary btn-lg btn-block">OFF</button>
-		<br />
-		<button id="button1" class="btn btn-primary btn-lg btn-block">2</button>
-		<button id="off1" class="btn btn-primary btn-lg btn-block">OFF</button>
-		<br />
-		<button id="button2" class="btn btn-primary btn-lg btn-block">3</button>
-		<button id="off2" class="btn btn-primary btn-lg btn-block">OFF</button>
-		<br />
-		<button id="button3" class="btn btn-primary btn-lg btn-block">4</button>
-		<button id="off3" class="btn btn-primary btn-lg btn-block">OFF</button>
-		<br />
-		<label for="timerange" class="form-label" id="time"></label>
-		<input type="range" class="form-range" id="timerange" min="1" max="20">
 
+	<div id="div0" class="container-fluid">
+		<form>
+			<div class="form-group">
+
+
+				<div class="row">
+					<div class="col-sm-6" >
+						<p>
+							<button type='button' id="button0" class="btn btn-primary btn-lg form-control">1</button>	
+						</p>
+						<p>
+							<button type='button' id="button1" class="btn btn-primary btn-lg form-control">2</button>
+						</p>
+						</div>
+
+					<div class="col-sm-6" >
+					
+						<p>
+							<button type='button' id="button2" class="btn btn-primary btn-lg form-control">3</button>
+						</p>
+						<p>
+							<button type='button' id="button3" class="btn btn-primary btn-lg form-control">4</button>
+						</p>
+					</div>
+					<div class="col-sm-12">
+						<button type="button" id="stop" class="btn btn-danger btn-lg form-control">stop</button>
+					</div>
+				</div>
+			</div>		
+		</form>
 	</div>
 	<script>
-		$(document).ready(function () {
+		$(document).ready(function () {			
+			var timeToOpen = [0,0,0,0];			
 			for (let i = 0; i < 4; i++) {
 				$("#button" + i).click(function (event) {
+					if(timeToOpen[i] < 4) timeToOpen[i] = 4;
+					timeToOpen[i]*=2;
+					$("#button" + i).text(timeToOpen[i]);
 					$.ajax({
-						url: '/wagenweg170B/solenoid/',
+						url: '/solenoid/',
 						type: 'POST',
 						contentType: 'application/json',
-						data: JSON.stringify({ 'switch': true, 'solenoidid': i }),
+						data: JSON.stringify({ 'switch': true, 'solenoidid': i, 'time' : timeToOpen[i] }),
 						//success: function (response) { }
-					})
+					})																								
 				});
+			}
 
-				$("#off" + i).click(function (event) {
-					$.ajax({
-						url: '/wagenweg170B/solenoid/',
-						type: 'POST',
-						contentType: 'application/json',
-						data: JSON.stringify({ 'switch': false, 'solenoidid': i }),
-						//success: function (response) { }
-					});
-				});
-			};
-			$("input[type=range]").on("change", function () {
+			setInterval(function() {
+				for(let i = 0; i< 4; i++) {
+					if(timeToOpen[i] <= 0) {
+						$("#button" + i).text(i+1);
+					} else {
+						$("#button" + i).text(timeToOpen[i]--);
+					}					
+				}								
+			}, 1000);
+
+			$("#stop").click(function (event) {
 				$.ajax({
-					url: '/wagenweg170B/time/',
+					url: '/stop/',
 					type: 'POST',
 					contentType: 'application/json',
-					data: JSON.stringify({ 'interval': $("#timerange").val() }),
+					//data: JSON.stringify({ 'switch': false, 'solenoidid': i }),
 					//success: function (response) { }
 				});
-				$("#time").html($("#timerange").val());
-			});
+				for(let i =0; i < 4; i++){
+					$("#button" + i).text(i+1);
+					timeToOpen[i] = 0;
+				}
+			});						
 		});
 
 	</script>
