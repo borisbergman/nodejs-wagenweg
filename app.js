@@ -45,19 +45,9 @@ app.use('/wagenweg170B/', express.static('public'))
 app.use(express.json()); 
 
 app.route('/wagenweg170B/solenoid/')
-  .post(function (req, res, next) {
-    
-    if(!req.body.switch) {
-      client.publish('/wagenweg/planten/off', "1");
-      res.send({'closed': true} );
-    } else if(req.body.switch) {
+  .post(function (req, res, next) {  
       client.publish('/wagenweg/planten', req.body.solenoidid.toString() + '-' + req.body.time.toString());
-      res.send({'opened': req.body.solenoidid} );
-    }
+      res.send({'opened': req.body.solenoidid} );  
   });
-app.route('/wagenweg170B/time/').post(function(req,res,next){
-  res.send({"interval":req.body.interval})
-  client.publish('/wagenweg/planten/time', (req.body.interval*1000).toString());
-});
 
 app.listen(8080)
