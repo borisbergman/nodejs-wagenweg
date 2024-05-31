@@ -52,7 +52,7 @@ app.route('/wagenweg170B/solenoid/')
 
 app.route('/wagenweg170B/stop/')
 .post(function (req, res, next) {  
-    client.publish('/wagenweg/planten/stop', 1);
+    client.publish('/wagenweg/planten/stop', "1");
     res.send({'stopped': 1} );  
 });
 
