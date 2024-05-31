@@ -59,10 +59,10 @@
 					timeToOpen[i]*=2;
 					$("#button" + i).text(timeToOpen[i]);
 					$.ajax({
-						url: '/solenoid/',
+						url: '/wagenweg170B/solenoid/',
 						type: 'POST',
 						contentType: 'application/json',
-						data: JSON.stringify({ 'switch': true, 'solenoidid': i, 'time' : timeToOpen[i] }),
+						data: JSON.stringify({ 'solenoidid': i, 'time' : timeToOpen[i] }),
 						//success: function (response) { }
 					})																								
 				});
@@ -80,7 +80,7 @@
 
 			$("#stop").click(function (event) {
 				$.ajax({
-					url: '/stop/',
+					url: '/wagenweg170B/stop/',
 					type: 'POST',
 					contentType: 'application/json',
 					//data: JSON.stringify({ 'switch': false, 'solenoidid': i }),

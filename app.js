@@ -50,4 +50,10 @@ app.route('/wagenweg170B/solenoid/')
       res.send({'opened': req.body.solenoidid} );  
   });
 
+app.route('/wagenweg170B/stop/')
+.post(function (req, res, next) {  
+    client.publish('/wagenweg/planten/stop', 1);
+    res.send({'stopped': 1} );  
+});
+
 app.listen(8080)
