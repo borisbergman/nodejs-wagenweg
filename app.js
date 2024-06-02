@@ -1,10 +1,11 @@
 #!/usr/bin/env nodejs
 
-const express = require('express')
+const express = require('express');
+const protobuf = require("protobufjs");
 const config = require('config');
 
-const app = express()
-const mqtt = require('mqtt')
+const app = express();
+const mqtt = require('mqtt');
 const mosquittopw = config.get('password');
 const mosquittouser = config.get('username');
 
@@ -46,7 +47,14 @@ app.use(express.json());
 
 app.route('/wagenweg170B/solenoid/')
   .post(function (req, res, next) {  
-      client.publish('/wagenweg/planten', req.body.solenoidid.toString() + '-' + req.body.time.toString());
+      protobuf.load("proto/solenoid.proto", function(err, root) {
+        var solenoidMessage = root.lookupType("Solenoid");
+        var payload = {id : req.body.solenoidid, time : req.body.time};
+        var message = solenoidMessage.create(payload);
+        var buffer = solenoidMessage.encode(message).finish();
+        
+        client.publish('/wagenweg/planten/', buffer);            
+      });              
       res.send({'opened': req.body.solenoidid} );  
   });
 
