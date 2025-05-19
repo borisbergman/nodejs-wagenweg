@@ -18,21 +18,32 @@ const options = {
   clientId: clientId,
   username: mosquittouser,
   password: mosquittopw,
-  reconnectPeriod: 1000,
+    
+  queueQoSZero: true,
+
+  reconnectPeriod: 30 * 1000,
   connectTimeout: 30 * 1000,
 }
 
-console.log('connecting mqtt client')
-const client = mqtt.connect(host, options)
+
+console.log('connecting mqtt client');
+const client = mqtt.connect(host, options);
+
+client.on('reconnect', () => {
+  console.log('… Reconnecting …');
+});
 
 client.on('error', function (err) {
-  console.log(err)
-  client.end()
+  console.error(err);
 })
 
 client.on('connect', function () {
-  console.log('client connected:' + clientId)
+  console.log('client connected:' + clientId);
 })
+
+client.on('offline', () => {
+  console.log('⚠️ Client offline, will queue messages');
+});
 
 client.on('message', function (topic, message, packet) {
   console.log('Received Message:= ' + message.toString() + '\nOn topic:= ' + topic)
