@@ -10,12 +10,12 @@ COPY package.json package-lock.json ./
 RUN npm ci --only=production
 
 # 4. Copy your config folder into the image
-COPY config/ ./config/
-COPY proto ./proto/
+COPY ./config/* ./config/
+COPY ./proto/* ./proto/
 
 #COPY . .
 # 5. Copy the rest of your application code
-COPY src/ ./
+COPY ./src/* ./src/
 
 # 6. Expose whatever port your app listens on
 EXPOSE 8080
