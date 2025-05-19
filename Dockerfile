@@ -12,6 +12,7 @@ RUN npm ci --only=production
 # 4. Copy your config folder into the image
 COPY ./config/* ./config/
 COPY ./proto/* ./proto/
+COPY ./public/* ./public/
 
 #COPY . .
 # 5. Copy the rest of your application code
