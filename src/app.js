@@ -58,7 +58,7 @@ app.use(express.json());
 
 app.route('/wagenweg170B/solenoid/')
   .post(function (req, res, next) {  
-      protobuf.load("../proto/solenoid.proto", function(err, root) {
+      protobuf.load("proto/solenoid.proto", function(err, root) {
         var solenoidMessage = root.lookupType("Solenoid");
         var payload = {id : req.body.solenoidid, time : req.body.time};
         var message = solenoidMessage.create(payload);
